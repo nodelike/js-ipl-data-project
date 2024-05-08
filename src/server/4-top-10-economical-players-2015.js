@@ -30,7 +30,13 @@ function bubbleSortObject(object) {
 function calculateBowlersEconomyRate(matches, deliveries){
   try {
     let bowlerStats = {};
-    
+    let matchIDs2015 = [];
+
+    for(let match of matches){
+      if(match.season == '2015'){
+          matchIDs2015.push(match.id);
+      }
+    }
     for(let delivery of deliveries){
       if (matchIDs2015.includes(delivery.match_id)) {
         if (delivery.bowler in bowlerStats) {
