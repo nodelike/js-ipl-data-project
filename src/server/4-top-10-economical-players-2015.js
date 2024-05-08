@@ -29,51 +29,45 @@ function bubbleSortObject(object) {
 
 function calculateBowlersEconomyRate(matches, deliveries){
   try {
-    let bowlerStats = {};
-    let matchIDs2015 = [];
+    
+    let matchIDs2015 = matches.filter( match => {
+      return match.season == "2015";
+    }).map( match => {
+      return match.id;
+    });
 
-    for(let match of matches){
-      if(match.season == '2015'){
-          matchIDs2015.push(match.id);
-      }
-    }
-    for(let delivery of deliveries){
-      if (matchIDs2015.includes(delivery.match_id)) {
-        if (delivery.bowler in bowlerStats) {
-            bowlerStats[delivery.bowler].runs += parseInt(delivery.total_runs);
-            bowlerStats[delivery.bowler].balls++;
-        } else {
-            bowlerStats[delivery.bowler] = {
-                runs: parseInt(delivery.total_runs),
-                balls: 1
-            };
-        }
-      }
-    }
+    let bowlerStats = deliveries.filter( delivery => {
+      return matchIDs2015.includes(delivery.match_id)
+    }).reduce( (stats, delivery) => {
 
-    let economyRates = {}
-    for(let bowler in bowlerStats){
-        let overs = bowlerStats[bowler].balls / 6;
-        let economyRate = bowlerStats[bowler].runs / overs;
-
-        economyRates[bowler] = economyRate;
-    }
-    let sortedEconomyRates = bubbleSortObject(economyRates);
-
-    let result = {};
-    let tempCount = 0;
-    for(let key in sortedEconomyRates){
-      if(tempCount >= 10){
-        break;
+      if (delivery.bowler in stats) {
+        stats[delivery.bowler].runs += parseInt(delivery.total_runs);
+        stats[delivery.bowler].balls++;
       } else {
-        result[key] = sortedEconomyRates[key];
-        tempCount++;
+        stats[delivery.bowler] = {
+              runs: parseInt(delivery.total_runs),
+              balls: 1
+          };
       }
-    }
 
-    return result;
+      return stats;
+    }, {});
+
+    let economyRates = Object.entries(bowlerStats).map( ([bowler, stats]) => {
+      let overs = stats.balls / 6
+      let economyRate = stats.runs / overs;
+      
+      return [bowler, economyRate];
+    }).sort((a, b) => {
+      return a[1] - b[1];
+    }).slice(0, 10).reduce( (result, [bowler, economyRate]) => {
+      result[bowler] = economyRate;
+      return result;
+    }, {});
+    
+    return economyRates;
   } catch (error) {
-    console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
+    console.log(`Error getting top 10 economical players in 2015. ${error}`);
   }
 }
 
