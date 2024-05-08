@@ -7,16 +7,16 @@ let deliveries = getData().deliveries();
 function calculateExtraRunsPerTeam(matches, deliveries){
   try {
     let extraRunsPerTeam = {};
-    let matchIDs2016 = [];
+    let matchIDs2016 = {};
 
     for(let match of matches){
       if(match.season == '2016'){
-          matchIDs2016.push(match.id);
+          matchIDs2016[match.id] = true;
       }
     }
 
     for(let delivery of deliveries){
-      if (matchIDs2016.includes(delivery.match_id)) {
+      if (delivery.match_id in matchIDs2016) {
         if (delivery.bowling_team in extraRunsPerTeam) {
           extraRunsPerTeam[delivery.bowling_team] += parseInt(delivery.extra_runs);
         } else {
