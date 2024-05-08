@@ -6,44 +6,46 @@ let deliveries = getData().deliveries();
 
 function getBatsmanStrikeRateBySeason(matches, deliveries){
   try {
-    let batsmanRunsBySeason = {};
-    let matchIDBySeason = {};
+    let matchIDBySeason = matches.reduce( (acc, match) => {
+        acc[match.id] = match.season;
+        return acc
+    }, {});
 
-    for(let match of matches){
-        matchIDBySeason[match.id] = match.season;
-    }
-
-    for(let delivery of deliveries){
+    let batsmanRunsBySeason = deliveries.reduce( (acc, delivery) => {
         let season = matchIDBySeason[delivery.match_id]
-        // console.log(season);
-        if(batsmanRunsBySeason[season] == undefined){
-            batsmanRunsBySeason[season] = {};
-        } else {
-            if(batsmanRunsBySeason[season][delivery.batsman] == undefined){
-                batsmanRunsBySeason[season][delivery.batsman] = {
-                    runs: parseInt(delivery.batsman_runs),
-                    balls: 1
-                };
-            } else {
-                batsmanRunsBySeason[season][delivery.batsman].runs += parseInt(delivery.batsman_runs);
-                batsmanRunsBySeason[season][delivery.batsman].balls++;
-            }
+        let batsman = delivery.batsman;
+        let runs = parseInt(delivery.batsman_runs)
+
+        if(!acc[season]){
+            acc[season] = {}
         }
-    }
+
+        if(!acc[season][batsman]){
+            acc[season][batsman] = {
+                runs: runs,
+                balls: 1
+            };
+        } else {
+            acc[season][batsman].runs += runs;
+            acc[season][batsman].balls++;
+        }
+
+        return acc;
+    }, {});
 
     let batsmanStrikeRateBySeason = {}
-    for(let season in batsmanRunsBySeason){
+    Object.entries(batsmanRunsBySeason).forEach( ([season, stats]) => {
         batsmanStrikeRateBySeason[season] = {};
-        for(let batsman in batsmanRunsBySeason[season]){
-            let strikeRate = (batsmanRunsBySeason[season][batsman].runs / batsmanRunsBySeason[season][batsman].balls) * 100
+        Object.entries(stats).forEach(([batsman, batsmanStats]) => {
+            let strikeRate = (batsmanStats.runs / batsmanStats.balls) * 100;
             batsmanStrikeRateBySeason[season][batsman] = strikeRate;
-        }
-    }
+        });
+    });
 
-    // console.log(batsmanStrikeRateBySeason);
+    console.log(batsmanStrikeRateBySeason);
     return batsmanStrikeRateBySeason;
   } catch (error) {
-    console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
+    console.log(`Error getting strike rate of batsmen by season. ${error}`);
   }
 }
 
