@@ -6,13 +6,14 @@ let matches = getData().matches();
 function getMatchesPerYear(matches){
   try {
     let matchesInYear = {}
-    for(let match of matches){
+    matches.forEach( match => {
       if(matchesInYear[match.season] === undefined){
-          matchesInYear[match.season] = 1;
+        matchesInYear[match.season] = 1;
       } else {
           matchesInYear[match.season] += 1;
       }
-    }
+    });
+    
     return matchesInYear;
   } catch (error){
     console.log(`Error counting number of matches per year. ${error}`);
