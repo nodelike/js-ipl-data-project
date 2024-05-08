@@ -5,37 +5,36 @@ let deliveries = getData().deliveries();
 
 function getHighestPlayerDismissions(deliveries){
   try {
-    let playerDismissalCount= {};
-    
-    for(let delivery of deliveries){
+    let playerDismissalCount= deliveries.reduce( (acc, delivery) => {
         if(delivery.player_dismissed && delivery.bowler && delivery.dismissal_kind){
             const dismissalKey = `${delivery.bowler}-${delivery.player_dismissed}`
 
-            if(dismissalKey in playerDismissalCount){
-                playerDismissalCount[dismissalKey]++;
+            if(dismissalKey in acc){
+                acc[dismissalKey]++;
             } else {
-                playerDismissalCount[dismissalKey] = 1;
+                acc[dismissalKey] = 1;
             }
         }
-    }
 
-    let highestPlayerDismissalCount = 0;
-    let highestPlayerDismissalPairs =''
-    for(let dismissalPairs in playerDismissalCount){
-        if(playerDismissalCount[dismissalPairs] > highestPlayerDismissalCount){
-            highestPlayerDismissalCount = playerDismissalCount[dismissalPairs];
-            highestPlayerDismissalPairs = dismissalPairs;
+        return acc;
+    }, {});
+
+    const [highestPlayerDismissalPair, highestPlayerDismissalCount] = Object.entries(playerDismissalCount).reduce( ([maxPair, maxCount], [pair, count]) => {
+        if(count > maxCount){
+            return [pair, count];
         }
-    }
+
+        return [maxPair, maxCount];
+    });
 
     const result = {
-        bowler: highestPlayerDismissalPairs.split("-")[0],
-        playerDismissed: highestPlayerDismissalPairs.split("-")[1],
+        bowler: highestPlayerDismissalPair.split("-")[0],
+        playerDismissed: highestPlayerDismissalPair.split("-")[1],
         dismissalTimes: highestPlayerDismissalCount
     };
     return result;
   } catch (error) {
-    console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
+    console.log(`Error getting highest player dismissal pair and count. ${error}`);
   }
 }
 
