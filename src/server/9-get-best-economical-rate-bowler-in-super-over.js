@@ -29,44 +29,38 @@ function bubbleSortObject(object) {
 
 function getBestEconomicalRateInSuperOverBowler(eliveries){
   try {
-    let bowlerStats = {};
-
-    for(let delivery of deliveries){
-      if (delivery.is_super_over == '1') {
-        if (delivery.bowler in bowlerStats) {
-            bowlerStats[delivery.bowler].runs += parseInt(delivery.total_runs);
-            bowlerStats[delivery.bowler].balls++;
+    let bowlerStats = deliveries.reduce((acc, delivery) => {
+      if(delivery.is_super_over == '1'){
+        if (delivery.bowler in acc) {
+          acc[delivery.bowler].runs += parseInt(delivery.total_runs);
+          acc[delivery.bowler].balls++;
         } else {
-            bowlerStats[delivery.bowler] = {
+            acc[delivery.bowler] = {
                 runs: parseInt(delivery.total_runs),
                 balls: 1
             };
         }
       }
-    }
 
-    let economyRates = {}
-    for(let bowler in bowlerStats){
-        let overs = bowlerStats[bowler].balls / 6;
-        let economyRate = bowlerStats[bowler].runs / overs;
+      return acc;
+    }, {})
 
-        economyRates[bowler] = economyRate;
-    }
-    let sortedEconomyRates = bubbleSortObject(economyRates);
+    let bestEconomyRatePlayer = Object.entries(bowlerStats).map(([bowler, bowlerStat]) => {
+      let overs = bowlerStat.balls / 6;
+      let economyRate = bowlerStat.runs / overs;
 
-    let result = {};
-    let tempCount = 0;
-    for(let key in sortedEconomyRates){
-      if(tempCount >= 1){
-        break;
-      } else {
-        result[key] = sortedEconomyRates[key];
-        tempCount++;
-      }
-    }
-    return result;
+      return [bowler, economyRate];
+    }, {}).sort((a, b) => a[1] - b[1])
+          .slice(0, 1)
+          .reduce((acc, [bowler, economyRate]) => {
+            acc[bowler] = economyRate;
+
+            return acc;
+          }, {});
+
+    return bestEconomyRatePlayer;
   } catch (error) {
-    console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
+    console.log(`Error getting best economical rate bowler in super over. ${error}`);
   }
 }
 
