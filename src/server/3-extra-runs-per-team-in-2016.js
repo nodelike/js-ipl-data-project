@@ -6,24 +6,26 @@ let deliveries = getData().deliveries();
 
 function calculateExtraRunsPerTeam(matches, deliveries){
   try {
-    let extraRunsPerTeam = {};
-    let matchIDs2016 = {};
+    // let extraRunsPerTeam = {};
+    let matchIDs2016 = matches.filter( match => {
+      return match.season == '2016';
+    }).map( match => {
+      return match.id;
+    });
 
-    for(let match of matches){
-      if(match.season == '2016'){
-          matchIDs2016[match.id] = true;
-      }
-    }
+    let extraRunsPerTeam = deliveries.filter( delivery => {
+      return matchIDs2016.includes(delivery.match_id);
+    }).reduce( (acc, delivery) => {
 
-    for(let delivery of deliveries){
-      if (delivery.match_id in matchIDs2016) {
-        if (delivery.bowling_team in extraRunsPerTeam) {
-          extraRunsPerTeam[delivery.bowling_team] += parseInt(delivery.extra_runs);
-        } else {
-          extraRunsPerTeam[delivery.bowling_team] = parseInt(delivery.extra_runs);
-        }
+      if (delivery.bowling_team in acc) {
+        acc[delivery.bowling_team] += parseInt(delivery.extra_runs);
+      } else {
+        acc[delivery.bowling_team] = parseInt(delivery.extra_runs);
       }
-    }
+
+      return acc;
+    }, {});
+    
     return extraRunsPerTeam;
   } catch (error) {
     console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
