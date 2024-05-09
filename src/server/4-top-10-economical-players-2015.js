@@ -16,15 +16,16 @@ function calculateBowlersEconomyRate(matches, deliveries){
     let bowlerStats = deliveries.filter( delivery => {
       return matchIDs2015.includes(delivery.match_id)
     }).reduce( (stats, delivery) => {
+      let isLegalBall = delivery.noball_runs == '0' && delivery.wide_runs =='0';
 
       if (delivery.bowler in stats) {
-        stats[delivery.bowler].runs += parseInt(delivery.total_runs);
-        stats[delivery.bowler].balls++;
+        stats[delivery.bowler].runs += (parseInt(delivery.total_runs) + !isLegalBall)
+        stats[delivery.bowler].balls += isLegalBall;
       } else {
         stats[delivery.bowler] = {
-              runs: parseInt(delivery.total_runs),
-              balls: 1
-          };
+          runs: parseInt(delivery.total_runs) + !isLegalBall,
+          balls: isLegalBall
+        };
       }
 
       return stats;

@@ -7,13 +7,15 @@ function getBestEconomicalRateInSuperOverBowler(deliveries){
   try {
     let bowlerStats = deliveries.reduce((acc, delivery) => {
       if(delivery.is_super_over == '1'){
+        let isLegalBall = delivery.noball_runs == '0' && delivery.wide_runs =='0';
+
         if (delivery.bowler in acc) {
-          acc[delivery.bowler].runs += parseInt(delivery.total_runs);
-          acc[delivery.bowler].balls++;
+          acc[delivery.bowler].runs += (parseInt(delivery.total_runs) + !isLegalBall);
+          acc[delivery.bowler].balls += isLegalBall;
         } else {
             acc[delivery.bowler] = {
-                runs: parseInt(delivery.total_runs),
-                balls: 1
+                runs: parseInt(delivery.total_runs) + !isLegalBall,
+                balls: isLegalBall
             };
         }
       }

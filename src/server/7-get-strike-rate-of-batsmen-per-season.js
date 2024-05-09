@@ -19,15 +19,17 @@ function getBatsmanStrikeRateBySeason(matches, deliveries){
         if(!acc[season]){
             acc[season] = {}
         }
+        
+        let isLegalBall = delivery.noball_runs == '0' && delivery.wide_runs =='0';
 
         if(!acc[season][batsman]){
             acc[season][batsman] = {
-                runs: runs,
-                balls: 1
+                runs: runs + !isLegalBall,
+                balls: isLegalBall
             };
-        } else {
-            acc[season][batsman].runs += runs;
-            acc[season][batsman].balls++;
+        } else {    
+            acc[season][batsman].runs += (runs + !isLegalBall);
+            acc[season][batsman].balls += isLegalBall;
         }
 
         return acc;
