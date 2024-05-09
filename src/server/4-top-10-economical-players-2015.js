@@ -39,13 +39,18 @@ function calculateBowlersEconomyRate(matches, deliveries){
     }
     for(let delivery of deliveries){
       if (matchIDs2015.includes(delivery.match_id)) {
+        let isLegalBall = delivery.noball_runs == '0' && delivery.wide_runs =='0';
         if (delivery.bowler in bowlerStats) {
-            bowlerStats[delivery.bowler].runs += parseInt(delivery.total_runs);
-            bowlerStats[delivery.bowler].balls++;
+            if(isLegalBall){
+              bowlerStats[delivery.bowler].runs += parseInt(delivery.total_runs);
+              bowlerStats[delivery.bowler].balls++;
+            } else {
+              bowlerStats[delivery.bowler].runs += (parseInt(delivery.total_runs) + 1);
+            }
         } else {
             bowlerStats[delivery.bowler] = {
-                runs: parseInt(delivery.total_runs),
-                balls: 1
+                runs: parseInt(delivery.total_runs) + !isLegalBall,
+                balls: isLegalBall
             };
         }
       }

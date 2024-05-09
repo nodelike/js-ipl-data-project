@@ -15,18 +15,21 @@ function getBatsmanStrikeRateBySeason(matches, deliveries){
 
     for(let delivery of deliveries){
         let season = matchIDBySeason[delivery.match_id]
-        // console.log(season);
         if(batsmanRunsBySeason[season] == undefined){
             batsmanRunsBySeason[season] = {};
+        }
+        let isLegalBall = delivery.noball_runs == '0' && delivery.wide_runs =='0';
+        if(batsmanRunsBySeason[season][delivery.batsman] == undefined){
+            batsmanRunsBySeason[season][delivery.batsman] = {
+                runs: parseInt(delivery.batsman_runs) + !isLegalBall,
+                balls: isLegalBall
+            };
         } else {
-            if(batsmanRunsBySeason[season][delivery.batsman] == undefined){
-                batsmanRunsBySeason[season][delivery.batsman] = {
-                    runs: parseInt(delivery.batsman_runs),
-                    balls: 1
-                };
-            } else {
+            if(isLegalBall){
                 batsmanRunsBySeason[season][delivery.batsman].runs += parseInt(delivery.batsman_runs);
                 batsmanRunsBySeason[season][delivery.batsman].balls++;
+            } else {
+                batsmanRunsBySeason[season][delivery.batsman].runs += (parseInt(delivery.batsman_runs) + 1);
             }
         }
     }
