@@ -43,7 +43,7 @@ function getBatsmanStrikeRateBySeason(matches, deliveries){
     // console.log(batsmanStrikeRateBySeason);
     return batsmanStrikeRateBySeason;
   } catch (error) {
-    console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
+    console.log(`Error getting strike rate of batsmen by season. ${error}`);
   }
 }
 

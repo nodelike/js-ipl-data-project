@@ -35,7 +35,7 @@ function getHighestPlayerDismissions(deliveries){
     };
     return result;
   } catch (error) {
-    console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
+    console.log(`Error getting highest player dismissal pair and count. ${error}`);
   }
 }
 

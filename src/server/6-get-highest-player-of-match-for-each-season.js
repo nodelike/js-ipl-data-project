@@ -9,12 +9,12 @@ function getHighestPlayerOfMatchForEachSeason(matches){
     for(let match of matches){
         if(playerOfMatchCounts[match.season] == undefined){
             playerOfMatchCounts[match.season] = {};
+        }
+        
+        if(playerOfMatchCounts[match.season][match.player_of_match] == undefined){
+            playerOfMatchCounts[match.season][match.player_of_match] = 1;
         } else {
-            if(playerOfMatchCounts[match.season][match.player_of_match] == undefined){
-                playerOfMatchCounts[match.season][match.player_of_match] = 1;
-            } else {
-                playerOfMatchCounts[match.season][match.player_of_match] += 1;
-            }
+            playerOfMatchCounts[match.season][match.player_of_match] += 1;
         }
     }
     
@@ -36,7 +36,7 @@ function getHighestPlayerOfMatchForEachSeason(matches){
     // console.log(highestPlayerOfMatchPerSeason);
     return highestPlayerOfMatchPerSeason;
   } catch (error) {
-    console.log(`Error counting number of wins per year for each team. ${error}`);
+    console.log(`Error counting player with highest player of match for each season. ${error}`);
   }
 }
 

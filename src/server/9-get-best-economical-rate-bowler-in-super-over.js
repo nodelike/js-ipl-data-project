@@ -1,7 +1,6 @@
 const getData = require('../data/data.js');
 const saveDataToJSON = require("./saveDataToJSON.js");
 
-let matches = getData().matches();
 let deliveries = getData().deliveries();
 
 function bubbleSortObject(object) {
@@ -27,7 +26,7 @@ function bubbleSortObject(object) {
     return sortedObject;
 }
 
-function getBestEconomicalRateInSuperOverBowler(eliveries){
+function getBestEconomicalRateInSuperOverBowler(deliveries){
   try {
     let bowlerStats = {};
 
@@ -66,7 +65,7 @@ function getBestEconomicalRateInSuperOverBowler(eliveries){
     }
     return result;
   } catch (error) {
-    console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
+    console.log(`Error getting best economical rate bowler in super over. ${error}`);
   }
 }
 

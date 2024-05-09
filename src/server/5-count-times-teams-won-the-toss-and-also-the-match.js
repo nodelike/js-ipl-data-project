@@ -18,7 +18,7 @@ function countTimesTeamsWonTheTossAndTheMatch(matches){
     console.log(counts);
     return counts;
   } catch (error) {
-    console.log(`Error counting number of wins per year for each team. ${error}`);
+    console.log(`Error counting times the team won the toss and the match at the same time. ${error}`);
   }
 }
 
