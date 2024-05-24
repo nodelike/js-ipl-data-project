@@ -1,8 +1,5 @@
-const getData = require('../data/data.js');
+const { getMatchesData, getDeliveresData } = require("./../data/data.js");
 const saveDataToJSON = require("./saveDataToJSON.js");
-
-let matches = getData().matches();
-let deliveries = getData().deliveries();
 
 function calculateExtraRunsPerTeam(matches, deliveries){
   try {
@@ -31,6 +28,9 @@ function calculateExtraRunsPerTeam(matches, deliveries){
     console.log(`Error counting number of extra runs per team in year 2016. ${error}`);
   }
 }
-
-let result = calculateExtraRunsPerTeam(matches, deliveries);
-saveDataToJSON(result, "extraRunsPerTeam2016.json");
+getMatchesData()
+  .then(async (matches) => {
+    let deliveries = await getDeliveresData();
+    let result = calculateExtraRunsPerTeam(matches, deliveries);
+    saveDataToJSON(result, "extraRunsPerTeam2016.json");
+  })

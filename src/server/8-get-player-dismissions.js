@@ -1,7 +1,5 @@
-const getData = require('../data/data.js');
+const { getDeliveresData } = require("./../data/data.js");
 const saveDataToJSON = require("./saveDataToJSON.js");
-
-let deliveries = getData().deliveries();
 
 function getHighestPlayerDismissions(deliveries){
   try {
@@ -38,6 +36,8 @@ function getHighestPlayerDismissions(deliveries){
   }
 }
 
-let result = getHighestPlayerDismissions(deliveries);
-console.log(result);
-saveDataToJSON(result, "highestPlayerDismissed.json");
+getDeliveresData()
+    .then((deliveries) => {
+        let result = getHighestPlayerDismissions(deliveries);
+        saveDataToJSON(result, "highestPlayerDismissed.json");
+    })

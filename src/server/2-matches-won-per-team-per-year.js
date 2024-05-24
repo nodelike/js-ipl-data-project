@@ -1,7 +1,5 @@
-const getData = require('../data/data.js');
+const { getMatchesData } = require("./../data/data.js");
 const saveDataToJSON = require("./saveDataToJSON.js");
-
-let matches = getData().matches();
 
 function getMatchesWonPerTeamPerYear(matches){
   try {
@@ -25,6 +23,9 @@ function getMatchesWonPerTeamPerYear(matches){
   }
 }
 
-let result = getMatchesWonPerTeamPerYear(matches);
+getMatchesData()
+  .then((matches) => {
+    let result = getMatchesWonPerTeamPerYear(matches);
+    saveDataToJSON(result, "matchesWonPerTeamPerYear.json");
+  })
 
-saveDataToJSON(result, "matchesWonPerTeamPerYear.json");

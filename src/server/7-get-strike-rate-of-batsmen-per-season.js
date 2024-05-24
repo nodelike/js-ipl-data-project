@@ -1,8 +1,5 @@
-const getData = require('../data/data.js');
+const { getMatchesData, getDeliveresData } = require("./../data/data.js");
 const saveDataToJSON = require("./saveDataToJSON.js");
-
-let matches = getData().matches();
-let deliveries = getData().deliveries();
 
 function getBatsmanStrikeRateBySeason(matches, deliveries){
   try {
@@ -51,5 +48,10 @@ function getBatsmanStrikeRateBySeason(matches, deliveries){
   }
 }
 
-let result = getBatsmanStrikeRateBySeason(matches, deliveries);
-saveDataToJSON(result, "batsmanStrikeRateBySeason.json");
+getMatchesData()
+  .then(async (matches) => {
+    let deliveries = await getDeliveresData();
+
+    let result = getBatsmanStrikeRateBySeason(matches, deliveries);
+    saveDataToJSON(result, "batsmanStrikeRateBySeason.json");
+  })

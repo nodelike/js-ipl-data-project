@@ -1,8 +1,5 @@
-const getData = require('../data/data.js');
+const { getMatchesData, getDeliveresData } = require("./../data/data.js");
 const saveDataToJSON = require("./saveDataToJSON.js");
-
-let matches = getData().matches();
-let deliveries = getData().deliveries();
 
 function calculateBowlersEconomyRate(matches, deliveries){
   try {
@@ -49,5 +46,10 @@ function calculateBowlersEconomyRate(matches, deliveries){
   }
 }
 
-let result = calculateBowlersEconomyRate(matches, deliveries);
-saveDataToJSON(result, "top10EconomicalPlayers2015.json");
+getMatchesData()
+  .then(async (matches) => {
+    let deliveries = await getDeliveresData();
+
+    let result = calculateBowlersEconomyRate(matches, deliveries);
+    saveDataToJSON(result, "top10EconomicalPlayers2015.json");
+  })

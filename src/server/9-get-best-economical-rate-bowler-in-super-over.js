@@ -1,7 +1,5 @@
-const getData = require('../data/data.js');
+const { getDeliveresData } = require("./../data/data.js");
 const saveDataToJSON = require("./saveDataToJSON.js");
-
-let deliveries = getData().deliveries();
 
 function getBestEconomicalRateInSuperOverBowler(deliveries){
   try {
@@ -42,5 +40,8 @@ function getBestEconomicalRateInSuperOverBowler(deliveries){
   }
 }
 
-let result = getBestEconomicalRateInSuperOverBowler(deliveries);
-saveDataToJSON(result, "bestEconomicalRateInSuperOverBowler.json");
+getDeliveresData()
+  .then((deliveries) => {
+    let result = getBestEconomicalRateInSuperOverBowler(deliveries);
+    saveDataToJSON(result, "bestEconomicalRateInSuperOverBowler.json");
+  })

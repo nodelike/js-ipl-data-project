@@ -1,7 +1,5 @@
-const getData = require('../data/data.js');
+const { getMatchesData } = require("./../data/data.js");
 const saveDataToJSON = require("./saveDataToJSON.js");
-
-let matches = getData().matches();
 
 function getHighestPlayerOfMatchForEachSeason(matches){
   try {
@@ -40,5 +38,9 @@ function getHighestPlayerOfMatchForEachSeason(matches){
   }
 }
 
-let result = getHighestPlayerOfMatchForEachSeason(matches);
-saveDataToJSON(result, "highestPlayerOfMatchForEachSeason.json");
+getMatchesData()
+  .then((matches) => {
+    let result = getHighestPlayerOfMatchForEachSeason(matches);
+    saveDataToJSON(result, "highestPlayerOfMatchForEachSeason.json");
+  })
+

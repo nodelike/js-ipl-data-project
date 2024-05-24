@@ -1,7 +1,5 @@
-const getData = require('../data/data.js');
+const { getMatchesData } = require("./../data/data.js");
 const saveDataToJSON = require("./saveDataToJSON.js");
-
-let matches = getData().matches();
 
 function countTimesTeamsWonTheTossAndTheMatch(matches){
   try {
@@ -22,7 +20,8 @@ function countTimesTeamsWonTheTossAndTheMatch(matches){
     console.log(`Error counting times the team won the toss and the match at the same time. ${error}`);
   }
 }
-
-let result = countTimesTeamsWonTheTossAndTheMatch(matches);
-
-saveDataToJSON(result, "timesTeamsWonTheTossAndTheMatch.json");
+getMatchesData()
+  .then((matches) => {
+    let result = countTimesTeamsWonTheTossAndTheMatch(matches);
+    saveDataToJSON(result, "timesTeamsWonTheTossAndTheMatch.json");
+  })
