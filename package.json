@@ -2,9 +2,9 @@
   "name": "js-ipl-data-project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon src/server/index.js"
+    "start": "nodemon src/server/server.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/nodelike/js-ipl-data-project#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "csv-parse": "^5.5.5",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
     "nodemon": "^3.1.0"
   }

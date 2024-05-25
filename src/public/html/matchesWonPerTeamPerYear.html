@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Matches Per Year</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <canvas id="chartCanvas"></canvas>
+        </div>
+        <script>
+            fetch("http://localhost:3000/api/data/matchesWonPerTeamPerYear")
+                .then((response) => response.json())
+                .then((data) => {
+                    const years = Object.keys(data);
+                    const teams = [
+                        ...new Set(
+                            Object.values(data).flatMap((season) =>
+                                Object.keys(season)
+                            )
+                        ),
+                    ];
+                    const teamColors = {};
+                    teams.forEach((team) => {
+                        const r = Math.floor(Math.random() * 256);
+                        const g = Math.floor(Math.random() * 256);
+                        const b = Math.floor(Math.random() * 256);
+                        teamColors[team] = `rgba(${r}, ${g}, ${b}, 0.6)`;
+                    });
+
+                    const datasets = teams.map((team) => ({
+                        label: team,
+                        data: years.map((year) => data[year][team] || 0),
+                        backgroundColor: teamColors[team],
+                        borderColor: teamColors[team],
+                        borderWidth: 1,
+                    }));
+
+                    const ctx = document
+                        .getElementById("chartCanvas")
+                        .getContext("2d");
+                    new Chart(ctx, {
+                        type: "bar",
+                        data: {
+                            labels: years,
+                            datasets: datasets,
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                },
+                            },
+                        },
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        </script>
+    </body>
+</html>
