@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>IPL Data Viz</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="left-col">
+          <div class="glass-effect btn-container">
+            <a href="/matchesPerYear"><button id="matchesPerYear">1. Matches Per Year</button></a>
+            <a href="/matchesWonPerTeamPerYear"><button id="matchesWonPerTeamPerYear">2. Matches Won Per Team Per Year</button></a>
+            <a href="/extraRunsPerTeam"><button id="extraRunsPerTeam">3. Extra Runs Conceded in 2016</button></a>
+            <a href="/bowlersEconomyRate"><button id="bowlersEconomyRate">4. Top 10 Economical Players (2015)</button></a>
+            <a href="/timesTeamWonTossAndMatch"><button id="timesTeamWonTossAndMatch">5. Times Team Won Toss and Match</button></a>
+            <a href="/highestPlayerOfMatchForEachSeason"><button id="highestPlayerOfMatchForEachSeason">6. Highest Player of Match for Each Season</button></a>
+            <a href="/batsmanStrikeRateBySeason"><button id="batsmanStrikeRateBySeason">7. Batsman Strike Rate by Season</button></a>
+            <a href="/highestPlayerDismissals"><button id="highestPlayerDismissals">8. Highest Player Dismissals</button></a>
+            <a href="/bestEconomicalRateInSuperOverBowler"><button id="bestEconomicalRateInSuperOverBowler">9. Best Economical Rate in Super Over Bowler</button></a>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div class="glass-effect title-card">
+            <h1 id="title"></h1>
+          </div>
+
+          <div class="glass-effect data-container">
+            <ul class="data-list">
+
+            </ul>
+          </div>
+        </div>
+
+        <script>
+            const title = ('<%- title%>');
+            document.getElementById("title").textContent = title;
+            const id = ('<%- id%>');
+            document.getElementById(id).classList.toggle("active");
+
+
+            const data = JSON.parse('<%- JSON.stringify(data) %>');
+            
+            for(let key in data){
+                const li = document.createElement("li");
+
+                const div = document.createElement("div");
+                div.classList.toggle("data");
+
+                const p1 = document.createElement("p");
+                p1.style.fontWeight = "bold";
+                p1.innerText = key + ":";
+
+                const p2 = document.createElement("p");
+                p2.style.fontWeight = "bold";
+                p2.innerText = data[key];
+
+                div.appendChild(p1);
+                div.appendChild(p2);
+
+                li.appendChild(div);
+
+                document.querySelector(".data-list").appendChild(li);
+            }
+            
+        </script>
+    </body>
+</html>
