@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Matches Won Per Team Per Year</title>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+   <div class="left-col">
+       <div class="glass-effect btn-container">
+        <a href="/matchesPerYear"><button id="matchesPerYear">1. Matches Per Year</button></a>
+        <a href="/matchesWonPerTeamPerYear"><button id="matchesWonPerTeamPerYear">2. Matches Won Per Team Per Year</button></a>
+        <a href="/extraRunsPerTeam"><button id="extraRunsPerTeam">3. Extra Runs Conceded in 2016</button></a>
+        <a href="/bowlersEconomyRate"><button id="bowlersEconomyRate">4. Top 10 Economical Players (2015)</button></a>
+        <a href="/timesTeamWonTossAndMatch"><button id="timesTeamWonTossAndMatch">5. Times Team Won Toss and Match</button></a>
+        <a href="/highestPlayerOfMatchForEachSeason"><button id="highestPlayerOfMatchForEachSeason">6. Highest Player of Match for Each Season</button></a>
+        <a href="/batsmanStrikeRateBySeason"><button id="batsmanStrikeRateBySeason">7. Batsman Strike Rate by Season</button></a>
+        <a href="/highestPlayerDismissals"><button id="highestPlayerDismissals">8. Highest Player Dismissals</button></a>
+        <a href="/bestEconomicalRateInSuperOverBowler"><button id="bestEconomicalRateInSuperOverBowler">9. Best Economical Rate in Super Over Bowler</button></a>
+       </div>
+   </div>
+   <div class="right-col">
+        <div class="glass-effect title-card">
+        <h1 id="title"></h1>
+      </div>
+       <div class="glass-effect selection-container">
+           
+       </div>
+       <div class="glass-effect chart-container">
+           <canvas id="chartCanvas"></canvas>
+       </div>
+   </div>
+   <script>
+        const title = ('<%- title%>');
+        document.getElementById("title").textContent = title;
+        const id = ('<%- id%>');
+        document.getElementById(id).classList.toggle("active");
+
+        const labels = JSON.parse('<%- JSON.stringify(labels) %>')
+        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        const years = Object.keys(data);
+        const teams = [
+           ...new Set(
+               Object.values(data).flatMap((season) =>
+                   Object.keys(season)
+               )
+           ),
+       ];
+       const teamColors = {};
+       teams.forEach((team) => {
+           const r = Math.floor(Math.random() * 256);
+           const g = Math.floor(Math.random() * 256);
+           const b = Math.floor(Math.random() * 256);
+           teamColors[team] = `rgba(${r}, ${g}, ${b}, 0.9)`;
+       });
+        const ctx = document.getElementById("chartCanvas").getContext("2d");
+        const fontColor = "rgba(222, 222, 222, 0.9)";
+        let chart = null;
+
+        for(let year of years){
+            const btn = document.createElement('button');
+            btn.setAttribute('onclick', `loadChart(this, ${year})`)
+            btn.innerText = year;
+            document.querySelector('.selection-container').appendChild(btn);
+        }
+       function loadChart(button, year) {
+        const buttons = document.querySelectorAll('.selection-container button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.toggle("active")
+           const yearData = data[year];
+           const teams = Object.keys(yearData);
+           const wins = Object.values(yearData);
+           
+           if (chart) {
+               chart.destroy();
+           }
+           
+           chart = new Chart(ctx, {
+               type: "bar",
+               data: {
+                   labels: teams,
+                   datasets: [{
+                       label: `${labels.y} in ${year}`,
+                       data: wins,
+                       backgroundColor: teams.map(team => teamColors[team]),
+                       borderColor: teams.map(team => teamColors[team]),
+                       borderWidth: 1
+                   }]
+               },
+               options: {
+                   plugins: {
+                       legend: {
+                           labels: {
+                               color: fontColor
+                           }
+                       }
+                   },
+                   scales: {
+                       y: {
+                           title: {
+                               display: true,
+                               text: labels.y,
+                               color: fontColor
+                           },
+                           ticks: {
+                               color: fontColor
+                           },
+                           grid: {
+                               color: fontColor
+                           },
+                           beginAtZero: true,
+                           stepSize: 1
+                       },
+                       x: {
+                           title: {
+                               display: true,
+                               text: labels.x,
+                               color: fontColor
+                           },
+                           ticks: {
+                               color: fontColor
+                           },
+                           grid: {
+                               color: fontColor
+                           }
+                       }
+                   }
+               }
+           });
+       }
+       
+       // Load the chart for the first year by default
+       loadChart(document.querySelector('.selection-container button'), years[0]);
+   </script>
+</body>
+</html>
