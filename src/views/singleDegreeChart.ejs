@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>IPL Data Viz</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="left-col">
+          <div class="glass-effect btn-container">
+            <a href="/matchesPerYear"><button id="matchesPerYear">1. Matches Per Year</button></a>
+            <a href="/matchesWonPerTeamPerYear"><button id="matchesWonPerTeamPerYear">2. Matches Won Per Team Per Year</button></a>
+            <a href="/extraRunsPerTeam"><button id="extraRunsPerTeam">3. Extra Runs Conceded in 2016</button></a>
+            <a href="/bowlersEconomyRate"><button id="bowlersEconomyRate">4. Top 10 Economical Players (2015)</button></a>
+            <a href="/timesTeamWonTossAndMatch"><button id="timesTeamWonTossAndMatch">5. Times Team Won Toss and Match</button></a>
+            <a href="/highestPlayerOfMatchForEachSeason"><button id="highestPlayerOfMatchForEachSeason">6. Highest Player of Match for Each Season</button></a>
+            <a href="/batsmanStrikeRateBySeason"><button id="batsmanStrikeRateBySeason">7. Batsman Strike Rate by Season</button></a>
+            <a href="/highestPlayerDismissals"><button id="highestPlayerDismissals">8. Highest Player Dismissals</button></a>
+            <a href="/bestEconomicalRateInSuperOverBowler"><button id="bestEconomicalRateInSuperOverBowler">9. Best Economical Rate in Super Over Bowler</button></a>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div class="glass-effect title-card">
+            <h1 id="title"></h1>
+          </div>
+          <div class="glass-effect chart-container">
+              <canvas id="chart-canvas"></canvas>
+          </div>
+        </div>
+
+        <script>
+            const title = ('<%- title%>');
+            document.getElementById("title").textContent = title;
+            const id = ('<%- id%>');
+            document.getElementById(id).classList.toggle("active");
+
+            const labels = JSON.parse('<%- JSON.stringify(labels) %>')
+
+            const data = JSON.parse('<%- JSON.stringify(data) %>');
+            const xData = Object.keys(data);
+            const yData = Object.values(data);
+            const ctx = document.getElementById("chart-canvas").getContext("2d");
+
+            const fontColor = "rgba(255, 255, 255, 0.9)";
+
+            const chartColors = xData.map(bowler => {
+                const r = Math.floor(Math.random() * 256);
+                const g = Math.floor(Math.random() * 256);
+                const b = Math.floor(Math.random() * 256);
+                return `rgba(${r}, ${g}, ${b}, 0.9)`;
+            });
+
+            new Chart(ctx, {
+              type: "bar",
+              data: {
+                labels: xData,
+                datasets: [{
+                  label: labels.y,
+                  data: yData,
+                  backgroundColor: "rgba(3, 201, 136, 0.8)",
+                  borderColor: "rgba(3, 201, 136, 1)",
+                  borderWidth: 2,
+                }],
+              },
+              options: {
+                plugins: {
+                  legend: {
+                      labels: {
+                          color: fontColor
+                      }
+                  }
+                },
+                scales: {
+                  y: {
+                    title : {
+                        display: true,
+                        text: labels.y,
+                        color: fontColor
+                    },
+                    ticks : {
+                      color: fontColor
+                    },
+                    grid : {
+                      color: fontColor
+                    },
+                    beginAtZero: true,
+                    stepSize: 10,
+                  },
+                  x: {
+                    title : {
+                        display: true,
+                        text: labels.x,
+                        color: fontColor
+                    },
+                    ticks : {
+                      color: fontColor
+                    },
+                    grid : {
+                      color: fontColor
+                    }
+                  }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+              },
+            });
+        </script>
+    </body>
+</html>
