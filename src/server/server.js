@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { dataRouter } = require("./routes/route.js");
+const { dataRouter, fileRouter } = require("./routes/route.js");
 const path = require("path");
 
 const app = express();
@@ -11,16 +11,10 @@ app.set("views", path.join(__dirname, "..", "views"));
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(express.static(path.join(__dirname, "..", "views")));
 
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:"
-  );
-  next();
-});
-
+//ENDPOINTS
+app.use("/", fileRouter);
 app.use("/api/data", dataRouter);
 
 app.listen(3000, () => {
