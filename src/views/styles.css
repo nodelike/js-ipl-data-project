@@ -1,0 +1,116 @@
+:root {
+    --bg-color: rgba(0, 0, 0, 0.2);
+    --secondary-bg: rgba(255, 255, 255, 0.15);
+    --border-color: rgba(222, 222, 222, 0.8);
+    --font-color: white;
+    --blur: blur(8px);
+}
+
+* {
+    font-family: monospace;
+}
+
+body {
+    background-image: url("./bg.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    height: 100vh;
+}
+
+.glass-effect {
+    background: var(--bg-color);
+    backdrop-filter: var(--blur);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    backdrop-filter: var(--blur);
+}
+
+.left-col{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-col{
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    /* gap: 10vh; */
+}
+
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 45px;
+    gap: 25px;
+}
+
+.btn-container button, .selection-container button {
+    background-color: var(--secondary-bg);
+    color: var(--font-color);
+    font-weight: bold;
+    padding: 15px 25px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.1s ease;
+}
+
+.btn-container button:hover, .btn-container button.active, .selection-container button:hover, .selection-container button.active{
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #303030;
+}
+
+.title-card{
+    color: var(--font-color);
+    width: 90%;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+}
+
+.selection-container{
+    display: flex;
+    gap: 20px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    width: 90%;
+    padding: 25px 30px;
+}
+
+.data-container {
+    width: 90%;
+    color: white;
+    padding: 30px;
+}
+
+.data{
+    display: flex;
+    gap: 10px;
+}
+
+.data p{
+    font-size: 16px;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 40%;
+    padding: 30px;
+}
